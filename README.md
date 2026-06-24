@@ -45,6 +45,60 @@ Mirrors `~/.hermes` (or `HERMES_HOME`; `%LOCALAPPDATA%\hermes` on Windows), plus
 
 - **Set `B2_ENCRYPTION_KEY`** — separate from your B2 credentials. Hermes stores secrets (`.env`, `auth.json`) and full conversation history (`state.db`) in plaintext on disk; this tool **includes** them (you need them for a working restore) but encrypts the whole mirror at rest. Without `B2_ENCRYPTION_KEY` it falls back to the B2 key and warns.
 
+## FAQ
+
+**How do I get Backblaze B2 credentials?**
+
+Create a free [Backblaze B2](https://blze.ai/storage) account, make a bucket, then create an Application Key. Use the keyID and applicationKey as `B2_KEY_ID` and `B2_APPLICATION_KEY`, and the bucket name as `B2_BUCKET`.
+
+**Is my data encrypted?**
+
+Yes — AES-256-GCM at rest. Set `B2_ENCRYPTION_KEY` to a long random passphrase. If you don't, it falls back to deriving a key from your B2 application key and prints a warning; setting a dedicated key means a leaked bucket credential can't decrypt your backups.
+
+**How often does it back up, and can I change the schedule?**
+
+By default it backs up immediately on start and then daily. Set `B2_SCHEDULE` to `daily`, `weekly`, or any cron expression.
+
+**Does it re-upload everything each time?**
+
+No. Backups are incremental — only files that changed since the last run are uploaded (SHA-256 diffing); unchanged files are carried forward server-side, so each snapshot still restores on its own.
+
+**How do I restore Hermes on a new machine?**
+
+Install and run `hermes-b2-backup` on the new machine. If local state is empty and snapshots exist in your bucket, it auto-restores the latest snapshot on first run. (You can also point it at a fresh bucket prefix to keep machines separate.)
+
+**How many snapshots are kept?**
+
+The 10 most recent by default; older ones are pruned. Change with `B2_KEEP_SNAPSHOTS`.
+
+**How do I run it automatically in the background?**
+
+`hermes-b2-backup --install` writes an OS service (launchd on macOS, systemd user unit on Linux, Task Scheduler on Windows). Because a background service can't see your shell's exported variables, put your credentials in `~/.config/hermes-b2-backup/config.json` (chmod 600) before activating it.
+
+**Can I back up several machines to one bucket?**
+
+Yes — give each machine a distinct `B2_PREFIX` so their snapshots don't mix.
+
+**How do I check it's actually working?**
+
+Run `hermes-b2-backup --once` and watch the output; it logs what it uploaded and the snapshot id. You can also browse the bucket in the B2 web UI.
+
+**How much does this cost?**
+
+Only your Backblaze B2 storage, which is priced per GB-month — see [blze.ai/storage](https://blze.ai/storage). The tool itself is free and open source (MIT).
+
+**Hermes already has `hermes backup` — why use this?**
+
+`hermes backup` writes a local zip. This tool is complementary: it adds incremental, **off-site**, **encrypted** backups to B2 — so a lost or compromised machine doesn't take your backups with it.
+
+**Are my profiles and memory providers included?**
+
+Yes — everything under `~/.hermes` (including `profiles/`) is mirrored, plus external memory-provider stores like `~/.honcho` when present.
+
+**Are my secrets backed up?**
+
+Yes — `.env` and `auth.json` are included because they're needed for a working restore, and the whole mirror is encrypted at rest. Set `B2_ENCRYPTION_KEY`.
+
 ## Learn more
 
 - [Backblaze B2 Cloud Storage](https://blze.ai/storage) — affordable, S3-compatible object storage
