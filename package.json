@@ -1,6 +1,6 @@
 {
   "name": "@backblaze-labs/hermes-b2-backup",
-  "version": "0.1.0",
+  "version": "0.3.0",
   "description": "Back up your Hermes Agent (NousResearch/hermes-agent) state \u2014 sessions, memory, skills, config, and secrets \u2014 to Backblaze B2: incremental, encrypted, WAL-safe.",
   "type": "module",
   "main": "dist/index.mjs",
@@ -25,7 +25,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@backblaze-labs/agent-backup-core": "^0.2.0"
+    "@backblaze-labs/agent-backup-core": "^0.3.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",
@@ -40,16 +40,24 @@
     "access": "public"
   },
   "keywords": [
-    "hermes",
-    "hermes-agent",
-    "nous-research",
     "backblaze",
     "b2",
-    "backup"
+    "backup",
+    "hermes",
+    "nous-research",
+    "ai-agent",
+    "cloud-storage",
+    "encryption",
+    "sqlite",
+    "cli",
+    "nodejs",
+    "offsite-backup",
+    "b2-labs"
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/backblaze-b2-samples/hermes-b2-backup"
-  }
+    "url": "git+https://github.com/backblaze-labs/hermes-b2-backup.git"
+  },
+  "homepage": "https://blze.ai/storage"
 }

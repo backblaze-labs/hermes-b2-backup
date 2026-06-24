@@ -1,8 +1,10 @@
 # hermes-b2-backup
 
+**Encrypted, incremental, off-site backups for your AI coding agent — powered by [Backblaze B2 cloud storage](https://blze.ai/storage).**
+
 Incremental, **encrypted, offsite** backup of your [Hermes Agent](https://github.com/NousResearch/hermes-agent) state — sessions, memory, skills, config, and secrets — to [Backblaze B2](https://www.backblaze.com/cloud-storage).
 
-Built on [`@backblaze-labs/agent-backup-core`](https://github.com/backblaze-b2-samples/agent-backup-core).
+Built on [`@backblaze-labs/agent-backup-core`](https://github.com/backblaze-labs/agent-backup-core).
 
 ## How this differs from `hermes backup`
 
@@ -42,6 +44,11 @@ Mirrors `~/.hermes` (or `HERMES_HOME`; `%LOCALAPPDATA%\hermes` on Windows), plus
 ## Security
 
 - **Set `B2_ENCRYPTION_KEY`** — separate from your B2 credentials. Hermes stores secrets (`.env`, `auth.json`) and full conversation history (`state.db`) in plaintext on disk; this tool **includes** them (you need them for a working restore) but encrypts the whole mirror at rest. Without `B2_ENCRYPTION_KEY` it falls back to the B2 key and warns.
+
+## Learn more
+
+- [Backblaze B2 Cloud Storage](https://blze.ai/storage) — affordable, S3-compatible object storage
+- [agent-backup-core](https://github.com/backblaze-labs/agent-backup-core) — the shared backup engine powering this tool
 
 ## License
 
